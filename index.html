@@ -7,8 +7,26 @@
   <meta name="description" content="Col·loca cada videojoc al seu lloc de la línia temporal.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style3d.css">
+  <script>
+    // Sense WebGL, anem a la versió 2D.
+    (function () {
+      try {
+        var c = document.createElement("canvas");
+        if (!(c.getContext("webgl2") || c.getContext("webgl"))) throw 0;
+      } catch (e) { location.replace("2d.html"); }
+    })();
+  </script>
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
 </head>
-<body>
+<body class="three">
+  <div id="stage" class="stage"></div>
+
   <header class="top">
     <h1>Timeline <span>· Videojocs</span></h1>
     <div class="stats">
@@ -27,25 +45,21 @@
         </select>
       </label>
       <button id="restart" class="btn">Nova partida</button>
+      <a class="btn" href="2d.html">2D</a>
     </div>
   </header>
 
   <div id="legend" class="legend" aria-label="Plataformes"></div>
 
-  <section class="hand">
-    <div id="current" class="current"></div>
-    <p id="hint" class="hint">Arrossega la carta o toca un <b>+</b> de la línia temporal on creus que va. Toca una carta de la línia per veure-la en gran.</p>
-  </section>
+  <p id="hint" class="hint3d">Arrossega la carta fins a un forat de la línia temporal, o toca un <b>+</b>. Arrossega la taula o fes servir la roda per moure't.</p>
 
-  <section class="timeline-wrap" aria-label="Línia temporal">
-    <div id="timeline" class="timeline"></div>
-  </section>
+  <div id="loading" class="loading">Barrejant la baralla…</div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <div id="zoom" class="zoom" hidden>
     <figure>
-      <img id="zoom-img" alt="">
+      <div class="zoom-card"><img id="zoom-img" alt=""><div class="zoom-foil"></div></div>
       <figcaption id="zoom-cap"></figcaption>
     </figure>
   </div>
@@ -61,6 +75,6 @@
   </div>
 
   <script src="cards.js"></script>
-  <script src="game.js"></script>
+  <script type="module" src="game3d.js"></script>
 </body>
 </html>

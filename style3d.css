@@ -1,0 +1,76 @@
+/* Versió 3D: l'escena ocupa tota la pantalla i la interfície flota per sobre. */
+body.three { overflow: hidden; height: 100vh; height: 100dvh; }
+
+.stage { position: fixed; inset: 0; touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+
+body.three .top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 2;
+  background: linear-gradient(rgba(10, 11, 16, .85), rgba(10, 11, 16, 0));
+  border-bottom: 0;
+}
+body.three .legend {
+  position: fixed;
+  top: 62px; left: 0; right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.hint3d {
+  position: fixed;
+  left: 50%; bottom: 10px;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  color: var(--muted);
+  font-size: .8rem;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 4px #000;
+}
+body.three .toast { bottom: auto; top: 96px; transform: translate(-50%, -20px); z-index: 3; }
+body.three .toast.show { transform: translate(-50%, 0); }
+
+.loading {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  z-index: 1;
+  pointer-events: none;
+}
+.loading[hidden] { display: none; }
+
+/* Carta ampliada amb inclinació i reflex holo */
+.zoom { perspective: 900px; }
+.zoom-card {
+  position: relative;
+  display: inline-block;
+  border-radius: 14px;
+  transform-style: preserve-3d;
+  transition: transform .08s;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .7);
+}
+.zoom-card img { display: block; box-shadow: none; }
+.zoom-foil {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  mix-blend-mode: color-dodge;
+  opacity: .35;
+  background:
+    linear-gradient(115deg, transparent 20%, hsla(var(--h, 200), 100%, 70%, .7) 40%, hsla(calc(var(--h, 200) + 80), 100%, 70%, .6) 55%, transparent 75%);
+  background-size: 250% 250%;
+  background-position: var(--px, 50%) var(--py, 50%);
+}
+
+@media (max-width: 600px) {
+  body.three .legend { display: none; }
+  .hint3d { font-size: .72rem; }
+  body.three .toast { top: 120px; }
+}
