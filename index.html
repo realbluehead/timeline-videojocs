@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timeline · Videojocs</title>
+  <meta name="description" content="Col·loca cada videojoc al seu lloc de la línia temporal.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Timeline <span>· Videojocs</span></h1>
+    <div class="stats">
+      <div class="stat score"><b id="score">0</b><small>punts</small></div>
+      <div class="stat"><b id="hits">0</b><small>encerts</small></div>
+      <div class="stat"><b id="misses">0</b><small>errors</small></div>
+      <div class="stat"><b id="left">0</b><small>queden</small></div>
+    </div>
+    <div class="controls">
+      <label>Cartes
+        <select id="length">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="40">40</option>
+          <option value="0">Totes</option>
+        </select>
+      </label>
+      <button id="restart" class="btn">Nova partida</button>
+    </div>
+  </header>
+
+  <section class="hand">
+    <div id="current" class="current"></div>
+    <p id="hint" class="hint">Arrossega la carta o toca un <b>+</b> de la línia temporal on creus que va.</p>
+  </section>
+
+  <section class="timeline-wrap" aria-label="Línia temporal">
+    <div id="timeline" class="timeline"></div>
+  </section>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="end" class="end" hidden>
+    <div class="end-box">
+      <h2>Fi de la partida</h2>
+      <p class="end-score"><b id="end-score">0</b> punts</p>
+      <p id="end-detail"></p>
+      <p id="end-best" class="end-best"></p>
+      <button id="again" class="btn btn-big">Tornar a jugar</button>
+    </div>
+  </div>
+
+  <script src="cards.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
