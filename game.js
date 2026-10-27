@@ -5,6 +5,7 @@
     current: $("current"), timeline: $("timeline"), wrap: document.querySelector(".timeline-wrap"),
     hint: $("hint"), toast: $("toast"), length: $("length"), restart: $("restart"),
     end: $("end"), endScore: $("end-score"), endDetail: $("end-detail"), endBest: $("end-best"), again: $("again"),
+    zoom: $("zoom"), zoomImg: $("zoom-img"), zoomCap: $("zoom-cap"), legend: $("legend"),
   };
 
   const BEST_KEY = "timeline-videojocs-best";
@@ -19,23 +20,33 @@
     return a;
   }
 
-  // Únic punt on es dibuixa una carta: per canviar-ne el disseny només cal tocar això (i el CSS de .card).
+  // Únic punt on es dibuixa una carta. Si té imatge (la carta de Foreverdeck), es mostra sencera;
+  // si no, o si la imatge no carrega, es fa servir el disseny simple.
   function renderCard(card, { hidden = false } = {}) {
     const el = document.createElement("div");
-    el.className = "card" + (hidden ? " hidden" : "");
-    const t = (card.year - 1970) / (2025 - 1970);
-    el.style.setProperty("--hue", Math.round(10 + t * 300));
-
-    const art = document.createElement("div");
-    art.className = "art";
+    el.className = `card fam-${card.family}` + (hidden ? " hidden" : "");
+    el.title = card.title;
     if (card.image) {
       const img = document.createElement("img");
+      img.className = "card-img";
       img.src = card.image;
-      img.alt = card.title;
-      art.append(img);
-    } else {
-      art.textContent = card.emoji || "🎮";
+      img.alt = `${card.title} (${card.platform})`;
+      img.draggable = false;
+      img.addEventListener("error", () => el.replaceWith(renderSimpleCard(card, hidden)));
+      el.classList.add("has-img");
+      el.append(img);
+      el.addEventListener("click", () => zoom(card));
+      return el;
     }
+    return renderSimpleCard(card, hidden);
+  }
+
+  function renderSimpleCard(card, hidden) {
+    const el = document.createElement("div");
+    el.className = `card fam-${card.family}` + (hidden ? " hidden" : "");
+    const art = document.createElement("div");
+    art.className = "art";
+    art.textContent = card.emoji || "🎮";
 
     const year = document.createElement("div");
     year.className = "year";
@@ -109,7 +120,10 @@
       const tick = document.createElement("div");
       tick.className = "tick";
       tick.textContent = card.year;
-      item.append(renderCard(card), tick);
+      const chip = document.createElement("div");
+      chip.className = `chip fam-${card.family}`;
+      chip.textContent = card.platform;
+      item.append(renderCard(card), tick, chip);
       els.timeline.append(item, makeSlot(i + 1));
     });
   }
@@ -206,9 +220,31 @@
     try { return localStorage.getItem(BEST_KEY) === null; } catch { return true; }
   }
 
+  // Vista ampliada d'una carta. La carta que s'està jugant no s'amplia per no revelar res.
+  function zoom(card) {
+    if (card === state.current) return;
+    els.zoomImg.src = card.image;
+    els.zoomImg.alt = card.title;
+    els.zoomCap.textContent = `${card.title} · ${card.year} · ${card.platform}`;
+    els.zoom.hidden = false;
+  }
+  els.zoom.addEventListener("click", () => { els.zoom.hidden = true; });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") els.zoom.hidden = true; });
+
+  function renderLegend() {
+    const used = new Set(window.DECK.map((c) => c.family));
+    els.legend.replaceChildren(...Object.entries(window.FAMILIES).filter(([k]) => used.has(k)).map(([k, f]) => {
+      const chip = document.createElement("span");
+      chip.className = `chip fam-${k}`;
+      chip.textContent = f.name;
+      return chip;
+    }));
+  }
+
   els.restart.addEventListener("click", newGame);
   els.again.addEventListener("click", newGame);
   els.length.addEventListener("change", newGame);
 
+  renderLegend();
   newGame();
 })();

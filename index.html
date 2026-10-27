@@ -30,9 +30,11 @@
     </div>
   </header>
 
+  <div id="legend" class="legend" aria-label="Plataformes"></div>
+
   <section class="hand">
     <div id="current" class="current"></div>
-    <p id="hint" class="hint">Arrossega la carta o toca un <b>+</b> de la línia temporal on creus que va.</p>
+    <p id="hint" class="hint">Arrossega la carta o toca un <b>+</b> de la línia temporal on creus que va. Toca una carta de la línia per veure-la en gran.</p>
   </section>
 
   <section class="timeline-wrap" aria-label="Línia temporal">
@@ -40,6 +42,13 @@
   </section>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="zoom" class="zoom" hidden>
+    <figure>
+      <img id="zoom-img" alt="">
+      <figcaption id="zoom-cap"></figcaption>
+    </figure>
+  </div>
 
   <div id="end" class="end" hidden>
     <div class="end-box">
